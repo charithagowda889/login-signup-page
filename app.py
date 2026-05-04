@@ -64,23 +64,30 @@ def get_profile():
         'company': user.company
     })
 
-@app.route('/profile', methods=['POST'])
+@app.route('/profile', methods=['GET', 'POST'])
 @jwt_required()
-def update_profile():
-    user_id = int(get_jwt_identity())
-    user = User.query.get(user_id)
+def profile():
+    username = get_jwt_identity()
+    user = User.query.filter_by(username=username).first()
 
-    data = request.get_json()
+    if request.method == 'POST':
+        data = request.json
 
-    
-    if 'role' in data and data['role']:
-        user.role = data['role']
+        if 'role' in data:
+            user.role = data['role']
+        if 'location' in data:
+            user.location = data['location']
+        if 'company' in data:
+            user.company = data['company']
 
-    if 'location' in data and data['location']:
-        user.location = data['location']
+        db.session.commit()
 
-    if 'company' in data and data['company']:
-        user.company = data['company']
+    return jsonify({
+        "username": user.username,
+        "role": user.role,
+        "location": user.location,
+        "company": user.company
+    })
 
     db.session.commit()
 
