@@ -41,7 +41,6 @@
   <div class="row justify-content-center">
     <div class="col-md-5">
 
-      <!-- AUTH SECTION -->
       <div class="card p-4 mb-4" id="authSection">
 
 
@@ -57,7 +56,7 @@
           <button class="btn btn-success w-100" onclick="login()">Login</button>
         </div>
 
-        <!-- Signup -->
+        
         <div id="signupForm" style="display:none;">
           <input id="su_user" class="form-control mb-2" placeholder="Username">
           <input id="su_pass" class="form-control mb-2" type="password" placeholder="Password">
@@ -65,8 +64,6 @@
         </div>
 
       </div>
-
-      <!-- PROFILE SECTION -->
       <div class="card p-4" id="profileSection" style="display:none;">
         <h4 class="text-center">Profile</h4>
 
@@ -81,7 +78,6 @@
         <button class="btn btn-danger w-100 mt-2" onclick="logout()">Logout</button>
       </div>
 
-      <!-- OUTPUT -->
       <div class="card p-3 mt-3">
         <div id="output"></div>
       </div>
@@ -142,7 +138,6 @@ function signup() {
     })
   })
   .then(r => r.json())
-  // FIX: show the msg from server (covers both success and "User exists" error)
   .then(d => output({ msg: d.msg }));
 }
 
@@ -157,14 +152,14 @@ function login() {
   })
   .then(r => r.json())
   .then(d => {
-    // FIX: check token exists before switching to profile view
+  
     if (!d.access_token) {
       output({ msg: d.msg || "Login failed" });
       return;
     }
 
     token = d.access_token;
-    // FIX: save token to localStorage
+   
     localStorage.setItem('token', token);
 
     // Hide token from UI
@@ -184,13 +179,13 @@ function getProfile() {
   })
   .then(r => r.json())
   .then(d => {
-    // FIX: check for error response from server
+  
     if (d.msg && !d.username) {
       output({ msg: d.msg });
       return;
     }
 
-    // fill inputs
+    
     role.value     = d.role     || "";
     location.value = d.location || "";
     company.value  = d.company  || "";
@@ -221,14 +216,9 @@ function updateProfile() {
   })
   .then(r => r.json())
   .then(d => {
-    // FIX: backend now returns username/role/location/company along with msg
-    // so we can display all fields correctly
+    
     output({
-      msg:      d.msg,
-      username: d.username,
-      role:     d.role,
-      location: d.location,
-      company:  d.company
+      msg:      d.msg
     });
 
   });
@@ -236,27 +226,22 @@ function updateProfile() {
 
 function logout() {
   token = "";
-  // FIX: clear token from localStorage on logout
+
   localStorage.removeItem('token');
 
-  // Hide profile, show auth
   profileSection.style.display = "none";
   authSection.style.display = "block";
 
-  // Clear login fields
   li_user.value = "";
   li_pass.value = "";
 
-  // Clear signup fields
   su_user.value = "";
   su_pass.value = "";
 
-  // Clear profile fields
   role.value = "";
   location.value = "";
   company.value = "";
 
-  // Reset to login tab
   showLogin();
 
   output({ msg: "Logged out successfully" });
