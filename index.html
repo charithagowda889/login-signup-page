@@ -155,6 +155,9 @@ function login() {
   
     if (!d.access_token) {
       output({ msg: d.msg || "Login failed" });
+
+      li_user.value = "";
+      li_pass.value = "";
       return;
     }
 
