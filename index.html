@@ -220,6 +220,11 @@ function updateProfile() {
     output({
       msg:      d.msg
     });
+    if (d.msg) {
+      document.getElementById('role').value = "";
+      document.getElementById('location').value = "";
+      document.getElementById('company').value = "";
+    }
 
   });
 }
