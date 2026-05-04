@@ -1,2 +1,12 @@
 # login-signup-page
-This project implements a complete authentication system with user signup and login functionality. Users can register with their details, securely log in, and access authorized content. The system includes password handling, validation, and error management. It is designed following REST API principles and can be integrated into larger applications
+This project is a backend authentication system built using a lightweight Python framework such as Flask. 
+It demonstrates how modern authentication systems work using JWT (JSON Web Tokens) and a simple SQLite database.
+
+The system supports:
+User Registration (Signup)
+User Login
+JWT-based authentication
+Secure user profile access
+Updating user profile details
+
+This project is ideal for learning real-world backend authentication flow used in production systems.
