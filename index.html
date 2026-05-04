@@ -31,7 +31,6 @@
       background-color: #5a67d8;
     }
 
-    /* Profile Details Title */
     .profile-details-title {
       font-size: 0.75rem;
       font-weight: 700;
@@ -41,8 +40,6 @@
       margin-bottom: 8px;
       padding-left: 4px;
     }
-
-    /* Profile details box */
     .profile-detail-box {
       background: linear-gradient(135deg, #f8f5fa, #e8ecf1);
       border-radius: 12px;
@@ -81,7 +78,6 @@
       font-weight: 400;
     }
 
-    /* Edit / Update button */
     .btn-edit-small {
       background-color: #667eea;
       color: white;
@@ -118,8 +114,7 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-5">
-
-      <!-- AUTH SECTION -->
+      
       <div class="card p-4 mb-4" id="authSection">
 
         <div class="d-flex mb-3">
@@ -142,10 +137,8 @@
 
       </div>
 
-      <!-- PROFILE SECTION -->
       <div class="card p-4" id="profileSection" style="display:none;">
 
-        <!-- WELCOME MESSAGE -->
         <h4 class="text-center mb-3" id="welcomeMsg"></h4>
 
         <!-- PROFILE DETAILS TITLE + EDIT BUTTON on same line -->
@@ -156,7 +149,6 @@
           </button>
         </div>
 
-        <!-- PROFILE DETAILS BOX -->
         <div class="profile-detail-box">
           <div class="detail-item">
             <span class="detail-label">👤 Username</span>
@@ -176,7 +168,6 @@
           </div>
         </div>
 
-        <!-- PROFILE INPUTS (hidden by default) -->
         <div id="profileInputs" style="display:none;" class="mt-1 mb-2">
           <input id="role" class="form-control mb-2" placeholder="Role" oninput="onTyping()">
           <input id="location" class="form-control mb-2" placeholder="Location" oninput="onTyping()">
@@ -186,7 +177,6 @@
         <button class="btn btn-danger w-100 mt-2" onclick="logout()">Logout</button>
       </div>
 
-      <!-- OUTPUT -->
       <div class="card p-3 mt-3">
         <div id="output"></div>
       </div>
@@ -327,7 +317,6 @@ function setDetail(id, value) {
 function handleEditUpdate() {
   const btn = document.getElementById('editUpdateBtn');
 
-  // 👉 If NOT editing → switch to edit mode
   if (!isEditing) {
     document.getElementById('profileInputs').style.display = "block";
 
@@ -338,7 +327,6 @@ function handleEditUpdate() {
     return;
   }
 
-  // 👉 If editing → SAVE
   const role     = document.getElementById('role').value.trim();
   const location = document.getElementById('location').value.trim();
   const company  = document.getElementById('company').value.trim();
@@ -381,7 +369,6 @@ function updateProfile() {
 
     document.getElementById('profileInputs').style.display = "none";
 
-    // 👉 reset button back to EDIT
     const btn = document.getElementById('editUpdateBtn');
     btn.textContent = "✏️ Edit Profile";
     btn.className = "btn-edit-small";
