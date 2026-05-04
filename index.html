@@ -136,6 +136,7 @@
         <div id="signupForm" style="display:none;">
           <input id="su_user" class="form-control mb-2" placeholder="Username">
           <input id="su_pass" class="form-control mb-2" type="password" placeholder="Password">
+          <input id="su_confirm_pass" class="form-control mb-2" type="password" placeholder="Confirm Password">
           <button class="btn btn-custom w-100" onclick="signup()">Signup</button>
         </div>
 
@@ -150,7 +151,9 @@
         <!-- PROFILE DETAILS TITLE + EDIT BUTTON on same line -->
         <div class="d-flex justify-content-between align-items-center mb-1">
           <span class="profile-details-title">📋 Profile Details</span>
-          <button id="editUpdateBtn" class="btn-edit-small" onclick="handleEditUpdate()">✏️ Edit Profile</button>
+          <button id="editUpdateBtn" class="btn-edit-small" onclick="handleEditUpdate()">
+            ✏️ Edit Profile
+          </button>
         </div>
 
         <!-- PROFILE DETAILS BOX -->
@@ -231,12 +234,29 @@ function showSignup() {
 }
 
 function signup() {
+  const username = su_user.value;
+  const password = su_pass.value;
+  const confirmPassword = su_confirm_pass.value;
+
+  // 1. Check empty fields
+  if (!username || !password || !confirmPassword) {
+    output({ msg: "All fields are required!", type: "error" });
+    return;
+  }
+
+  // 2. Check password match
+  if (password !== confirmPassword) {
+    output({ msg: "Passwords do not match!", type: "error" });
+    return;
+  }
+
+  // 3. Send to backend
   fetch(`${BASE_URL}/signup`, {
     method: 'POST',
-    headers: {'Content-Type': 'application/json'},
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      username: su_user.value,
-      password: su_pass.value
+      username: username,
+      password: password
     })
   })
   .then(r => r.json())
@@ -305,23 +325,30 @@ function setDetail(id, value) {
 }
 
 function handleEditUpdate() {
+  const btn = document.getElementById('editUpdateBtn');
+
+  // 👉 If NOT editing → switch to edit mode
   if (!isEditing) {
-    // Show inputs — enter edit mode
     document.getElementById('profileInputs').style.display = "block";
+
+    btn.textContent = "💾 Save";
+    btn.className = "btn-update-small";
+
     isEditing = true;
-  } else {
-    // Validate — at least one field must be filled
-    const role     = document.getElementById('role').value.trim();
-    const location = document.getElementById('location').value.trim();
-    const company  = document.getElementById('company').value.trim();
-
-    if (!role && !location && !company) {
-      output({ msg: "⚠️ Please fill at least one field to update!", type: "error" });
-      return;
-    }
-
-    updateProfile();
+    return;
   }
+
+  // 👉 If editing → SAVE
+  const role     = document.getElementById('role').value.trim();
+  const location = document.getElementById('location').value.trim();
+  const company  = document.getElementById('company').value.trim();
+
+  if (!role && !location && !company) {
+    output({ msg: "⚠️ Please fill at least one field!", type: "error" });
+    return;
+  }
+
+  updateProfile();
 }
 
 function onTyping() {
@@ -347,23 +374,23 @@ function updateProfile() {
   .then(d => {
     output({ msg: "Profile updated successfully ✅" });
 
-    // Clear and hide inputs
+    // reset inputs
     document.getElementById('role').value = "";
     document.getElementById('location').value = "";
     document.getElementById('company').value = "";
+
     document.getElementById('profileInputs').style.display = "none";
 
-    // Reset button
+    // 👉 reset button back to EDIT
     const btn = document.getElementById('editUpdateBtn');
     btn.textContent = "✏️ Edit Profile";
     btn.className = "btn-edit-small";
+
     isEditing = false;
 
-    // Refresh profile details
     getProfile();
   });
 }
-
 function logout() {
   token = "";
   localStorage.removeItem('token');
