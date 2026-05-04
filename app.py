@@ -83,7 +83,6 @@ def login():
     return jsonify(access_token=token)  # Send token to client
 
 
-# Protected API - get user profile
 @app.route('/profile', methods=['GET'])
 @jwt_required()  # Requires valid JWT token
 def get_profile():
@@ -99,7 +98,6 @@ def get_profile():
     })
 
 
-# Protected API - update user profile
 @app.route('/profile', methods=['POST'])
 @jwt_required()
 def update_profile():
