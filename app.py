@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy  # ORM to interact with database using Python classes
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import os
 from flask_cors import CORS
 
 
@@ -12,7 +12,13 @@ app = Flask(__name__, static_folder='static')
 CORS(app)
 
 # Configure database (SQLite file will be created as users.db)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+database_url = os.environ.get('DATABASE_URL', 'sqlite:///users.db')
+
+# Render gives postgres:// but SQLAlchemy needs postgresql://
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 
 # Secret key used to sign JWT tokens (important for security)
 app.config['JWT_SECRET_KEY'] = 'secret-key'
@@ -60,6 +66,7 @@ def signup():
     # Save user to database
     db.session.add(user)
     db.session.commit()
+
 
     return jsonify({'msg': 'Signup successful'})  # Return success message
 
@@ -120,10 +127,6 @@ def update_profile():
 
     return jsonify({
         'msg': 'Profile updated',
-        'username': user.username,
-        'role': user.role,
-        'location': user.location,
-        'company': user.company
     })
 
 
