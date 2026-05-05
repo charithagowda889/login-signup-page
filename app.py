@@ -54,7 +54,6 @@ def show_db():
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # Unique ID
     username = db.Column(db.String(100), unique=True)  # Username must be unique
-    email = db.column(db.String(150), unique=True)
     password = db.Column(db.String(200))  # Stores hashed password
     role = db.Column(db.String(100))  # Optional user role
     location = db.Column(db.String(100))  # Optional location
@@ -62,7 +61,6 @@ class User(db.Model):
 
 # Create database tables if not already created
 with app.app_context():
-    db.drop_all()
     db.create_all()
 
 
@@ -124,8 +122,7 @@ def get_profile():
         'username': user.username,
         'role': user.role,
         'location': user.location,
-        'company': user.company,
-        'email': user.email
+        'company': user.company
     })
 
 
@@ -146,9 +143,6 @@ def update_profile():
 
     if 'company' in data and data['company']:
         user.company = data['company']
-
-    if 'email' in data and data['email']:
-        user.email = data['email']
 
     # Save updated data
     db.session.commit()
