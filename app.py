@@ -27,6 +27,18 @@ app.config['JWT_SECRET_KEY'] = 'secret-key'
 db = SQLAlchemy(app)  # ORM setup
 jwt = JWTManager(app)  # JWT authentication setup
 
+@app.route('/admin/users')
+def get_all_users():
+    users = User.query.all()
+
+    return jsonify([
+        {
+            "username": u.username,
+            "role": u.role,
+            "location": u.location,
+            "company": u.company
+        } for u in users
+    ])
 
 # Define User model (table structure in database)
 class User(db.Model):
